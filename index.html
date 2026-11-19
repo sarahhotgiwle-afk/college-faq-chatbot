@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4f46e5">
+<title>SSWCOE | Campus Connect</title>
+
+<style>
+/* ========== THEME COLOURS ========== */
+:root {
+    --bg: #ffffff;
+    --bg-soft: #f4f7fc;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --primary: #4f46e5;
+    --chat-bg: #f8fafc;
+    --glass: rgba(255, 255, 255, 0.82);
+    --grad: linear-gradient(135deg, #4f46e5, #06b6d4);
+    --shadow: 0 20px 50px rgba(15, 31, 61, 0.12);
+}
+
+[data-theme="dark"] {
+    --bg: #0b1220;
+    --bg-soft: #0f172a;
+    --card: #111a2e;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #1f2a40;
+    --primary: #818cf8;
+    --chat-bg: #0d1526;
+    --glass: rgba(11, 18, 32, 0.82);
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+
+body {
+    font-family: "Segoe UI", system-ui, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+}
+
+a { color: inherit; text-decoration: none; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+button:disabled, input:disabled { opacity: 0.6; cursor: wait; }
+button:focus-visible, a:focus-visible, input:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 3px;
+}
+
+.container { width: min(1200px, 92%); margin: auto; }
+
+.gradient-text {
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ========== NOTICE BAR ========== */
+.notice {
+    padding: 8px 0;
+    background: #fef3c7;
+    color: #78350f;
+    text-align: center;
+    font-size: 12px;
+}
+.notice a { font-weight: 700; text-decoration: underline; }
+
+/* ========== NAVBAR ========== */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.site-header.scrolled {
+    border-color: var(--border);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    gap: 16px;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+
+.logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--grad);
+    color: #fff;
+    font-size: 22px;
+    font-weight: 800;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+}
+
+.brand strong { display: block; font-size: 18px; letter-spacing: 0.5px; }
+.brand small { display: block; margin-top: -2px; color: var(--muted); font-size: 11px; }
+
+.nav-links { display: flex; align-items: center; gap: 28px; }
+
+.nav-links a {
+    position: relative;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+.nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 2px;
+    background: var(--grad);
+    transition: width 0.25s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    font-size: 17px;
+}
+
+.menu-toggle { display: none; }
+
+/* ========== BUTTONS ========== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary {
+    background: var(--grad);
+    color: #fff;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(79, 70, 229, 0.4);
+}
+.btn-outline { border: 1px solid var(--border); background: var(--card); }
+.btn-outline:hover { transform: translateY(-2px); }
+
+/* ========== HERO ========== */
+.hero {
+    position: relative;
+    padding: 80px 0 90px;
+    overflow: hidden;
+    background: var(--bg-soft);
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.4;
+    animation: float 12s ease-in-out infinite;
+}
+.blob.one { width: 420px; height: 420px; top: -120px; left: -100px; background: #818cf8; }
+.blob.two { width: 380px; height: 380px; right: -80px; bottom: -140px; background: #22d3ee; animation-delay: -6s; }
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(40px, 30px); }
+}
+
+.hero-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 56px;
+    align-items: center;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 22px;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: pulse 1.8s infinite;
+}
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+    100% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+}
+
+.hero h1 {
+    margin-bottom: 20px;
+    font-size: clamp(38px, 5.2vw, 64px);
+    line-height: 1.08;
+    letter-spacing: -2px;
+}
+
+.lead { max-width: 520px; color: var(--muted); font-size: 17px; }
+
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 40px; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+.stat {
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--card);
+}
+.stat strong { display: block; font-size: 24px; font-weight: 800; }
+.stat span { color: var(--muted); font-size: 12px; }
+
+/* ========== CHAT CARD ========== */
+.chat-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+}
+
+.chat-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    background: var(--grad);
+    color: #fff;
+}
+
+.bot-id { display: flex; align-items: center; gap: 12px; }
+
+.bot-avatar {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    font-size: 20px;
+}
+
+.chat-head h2 { font-size: 16px; }
+.chat-head p { display: flex; align-items: center; gap: 6px; font-size: 12px; opacity: 0.9; }
+.online { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
+
+.head-btn {
+    padding: 8px 12px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.messages {
+    height: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px;
+    overflow-y: auto;
+    background: var(--chat-bg);
+}
+
+.row {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    max-width: 90%;
+    flex-shrink: 0;
+    animation: pop 0.3s ease;
+}
+.row.user { align-self: flex-end; flex-direction: row-reverse; }
+
+@keyframes pop {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    background: var(--grad);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+}
+.row.user .avatar { background: var(--border); color: var(--text); font-size: 10px; }
+
+.bubble {
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: 16px 16px 16px 4px;
+    background: var(--card);
+    font-size: 13.5px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+.bubble a { color: var(--primary); font-weight: 600; text-decoration: underline; }
+
+.row.user .bubble {
+    border: none;
+    border-radius: 16px 16px 4px 16px;
+    background: var(--grad);
+    color: #fff;
+}
+
+.time { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
+.row.user .time { text-align: right; }
+
+.typing { display: flex; gap: 5px; padding: 14px 16px; }
+.typing span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    animation: bounce 1.2s infinite;
+}
+.typing span:nth-child(2) { animation-delay: 0.15s; }
+.typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-6px); opacity: 1; }
+}
+
+.chips {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px 0;
+    overflow-x: auto;
+    border-top: 1px solid var(--border);
+    scrollbar-width: none;
+}
+
+.chip {
+    flex-shrink: 0;
+    padding: 7px 13px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    transition: border-color 0.2s, color 0.2s;
+}
+.chip:hover { border-color: var(--primary); color: var(--primary); }
+
+.composer { display: flex; gap: 8px; padding: 12px 16px 16px; }
+
+.composer input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px 15px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--chat-bg);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.composer input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+}
+
+.send {
+    width: 50px;
+    border-radius: 12px;
+    background: var(--grad);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* ========== SECTIONS ========== */
+.section { padding: 90px 0; }
+.section.alt { background: var(--bg-soft); }
+
+.section-head { max-width: 640px; margin: 0 auto 50px; text-align: center; }
+
+.label {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.section-head h2, .about-text h2, .contact h2 {
+    margin-bottom: 12px;
+    font-size: clamp(28px, 3.5vw, 42px);
+    line-height: 1.15;
+    letter-spacing: -1px;
+}
+.section-head p { color: var(--muted); }
+
+.card {
+    padding: 26px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--card);
+    transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+.card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+
+/* Features */
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+.f-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 16px;
+    border-radius: 14px;
+    background: rgba(79, 70, 229, 0.1);
+    font-size: 22px;
+}
+.card h3 { margin-bottom: 6px; font-size: 17px; }
+.card p { color: var(--muted); font-size: 14px; }
+
+/* How it works */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.step { text-align: center; }
+
+.step-num {
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: var(--grad);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 800;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+}
+
+/* About */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+.about-text > p { margin-bottom: 20px; color: var(--muted); }
+
+.checklist { list-style: none; }
+.checklist li {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+}
+
+.tick {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(6, 182, 212, 0.15);
+    color: #0891b2;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.info-card {
+    padding: 34px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #1e1b4b, #0f1f3d);
+    color: #fff;
+    box-shadow: var(--shadow);
+}
+.info-card h3 { margin-bottom: 20px; font-size: 22px; }
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 14px;
+}
+.info-row:last-child { border-bottom: none; }
+.info-row span { color: #a5b4fc; }
+.info-row strong { text-align: right; }
+
+/* Programs */
+.programs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+
+.program { display: flex; flex-direction: column; gap: 14px; }
+.program:hover { border-color: var(--primary); }
+
+.p-icon {
+    align-self: flex-start;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: var(--grad);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.ask {
+    align-self: flex-start;
+    margin-top: auto;
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+}
+.ask:hover { text-decoration: underline; }
+
+.program.cta { border: none; background: var(--grad); color: #fff; }
+.program.cta p { color: rgba(255, 255, 255, 0.85); }
+.program.cta .ask { color: #fff; }
+.program.cta .p-icon { background: rgba(255, 255, 255, 0.2); }
+
+/* FAQ */
+.faq { display: grid; gap: 12px; max-width: 820px; margin: auto; }
+
+details {
+    padding: 0 20px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--card);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+details[open] { border-color: var(--primary); box-shadow: var(--shadow); }
+
+summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 0;
+    font-weight: 700;
+    list-style: none;
+    cursor: pointer;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after {
+    content: "+";
+    color: var(--primary);
+    font-size: 24px;
+    transition: transform 0.2s;
+}
+details[open] summary::after { transform: rotate(45deg); }
+details p { padding-bottom: 18px; color: var(--muted); font-size: 14.5px; }
+
+/* Contact */
+.contact {
+    padding: 90px 0;
+    background: linear-gradient(135deg, #0f1f3d, #1e1b4b);
+    color: #fff;
+}
+.contact .label { color: #67e8f9; }
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+.contact-text p { margin-bottom: 16px; color: #c7d2fe; }
+
+.contact-list { display: grid; gap: 14px; }
+
+.contact-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    transition: background 0.2s, transform 0.2s;
+}
+.contact-card:hover { background: rgba(255, 255, 255, 0.1); transform: translateX(5px); }
+
+.c-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--grad);
+    font-size: 20px;
+}
+.contact-card small {
+    display: block;
+    color: #67e8f9;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.contact-card strong { overflow-wrap: anywhere; }
+
+/* Footer */
+footer {
+    padding: 28px 0;
+    background: #080f1d;
+    color: #94a3b8;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* Back to top */
+.to-top {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 40;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: var(--grad);
+    color: #fff;
+    font-size: 20px;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.3s, transform 0.3s;
+}
+.to-top.show { opacity: 1; pointer-events: auto; transform: none; }
+
+/* Scroll animation (content stays visible if JavaScript fails) */
+.reveal { opacity: 1; transform: none; }
+.js-ready .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.js-ready .reveal.visible { opacity: 1; transform: none; }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 980px) {
+    .hero-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; }
+    .grid-4, .programs { grid-template-columns: repeat(2, 1fr); }
+    .steps { grid-template-columns: 1fr; }
+
+    .menu-toggle { display: grid; }
+    .nav-cta { display: none; }
+
+    .nav-links {
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding: 8px 4%;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg);
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { width: 100%; padding: 14px 0; }
+    .nav-links a::after { display: none; }
+}
+
+@media (max-width: 600px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .grid-4, .programs { grid-template-columns: 1fr; }
+    .hero { padding: 50px 0 60px; }
+    .section, .contact { padding: 64px 0; }
+    .messages { height: 340px; }
+    .brand small { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+    .js-ready .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="notice">
+    <div class="container">
+        Student project — not the official college website. Confirm current details with the college.
+        <a href="https://sswcoe.edu.in/index.html" target="_blank" rel="noopener noreferrer">Official website ↗</a>
+    </div>
+</div>
+
+<!-- ========== NAVBAR ========== -->
+<header class="site-header" id="header">
+    <div class="container nav">
+        <a class="brand" href="#home">
+            <span class="logo">S</span>
+            <span>
+                <strong>SSWCOE</strong>
+                <small>Campus Connect · Solapur</small>
+            </span>
+        </a>
+
+        <nav class="nav-links" id="nav-links" aria-label="Main navigation">
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+            <a href="#programs">Programs</a>
+            <a href="#faq">FAQ</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+            <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
+            <a class="btn btn-primary nav-cta" href="#assistant">Ask Assistant</a>
+            <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Open menu">☰</button>
+        </div>
+    </div>
+</header>
+
+<main>
+
+<!-- ========== HERO + CHATBOT ========== -->
+<section class="hero" id="home">
+    <div class="blob one"></div>
+    <div class="blob two"></div>
+
+    <div class="container hero-grid">
+        <div class="reveal">
+            <span class="badge"><span class="pulse"></span> Smart College FAQ Assistant</span>
+
+            <h1>Every college answer,<br><span class="gradient-text">one chat away.</span></h1>
+
+            <p class="lead">
+                Get quick answers about programs, admissions, hostel, placements and contact
+                details for Shree Siddheshwar Women's College of Engineering, Solapur.
+            </p>
+
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="#assistant">💬 Start chatting</a>
+                <a class="btn btn-outline" href="#programs">Explore programs →</a>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <strong class="gradient-text" data-count="5">5</strong>
+                    <span>Engineering programs</span>
+                </div>
+                <div class="stat">
+                    <strong class="gradient-text" data-count="2019" data-start="2000">2019</strong>
+                    <span>Established</span>
+                </div>
+                <div class="stat">
+                    <strong class="gradient-text">DBATU</strong>
+                    <span>Affiliation</span>
+                </div>
+                <div class="stat">
+                    <strong class="gradient-text">06938</strong>
+                    <span>Institute code</span>
+                </div>
+            </div>
+        </div>
+
+        <aside class="chat-card reveal" id="assistant" aria-label="SSWCOE chatbot">
+            <div class="chat-head">
+                <div class="bot-id">
+                    <div class="bot-avatar">🎓</div>
+                    <div>
+                        <h2>SSWCOE Assistant</h2>
+                        <p><span class="online"></span> Online · Replies instantly</p>
+                    </div>
+                </div>
+                <button class="head-btn" id="clear-chat" type="button">↻ Clear</button>
+            </div>
+
+            <div class="messages" id="messages" role="log" aria-live="polite"></div>
+
+            <div class="chips">
+                <button class="chip" type="button" data-question="Which courses are offered?">🎓 Courses</button>
+                <button class="chip" type="button" data-question="How can I get admission information?">📝 Admission</button>
+                <button class="chip" type="button" data-question="What are the college fees?">💰 Fees</button>
+                <button class="chip" type="button" data-question="Tell me about the hostel.">🏠 Hostel</button>
+                <button class="chip" type="button" data-question="Tell me about placements.">💼 Placements</button>
+                <button class="chip" type="button" data-question="What are the contact details?">📞 Contact</button>
+            </div>
+
+            <form class="composer" id="chat-form">
+                <input id="question" type="text" placeholder="Ask about courses, hostel, admission..."
+                       maxlength="500" autocomplete="off" aria-label="Your question" required>
+                <button class="send" id="send-button" type="submit" aria-label="Send">➤</button>
+            </form>
+        </aside>
+    </div>
+</section>
+
+<!-- ========== FEATURES ========== -->
+<section class="section" id="features">
+    <div class="container">
+        <div class="section-head reveal">
+            <span class="label">WHY USE IT</span>
+            <h2>Built to make college information <span class="gradient-text">simple</span></h2>
+            <p>No more searching through pages or waiting in queues for basic questions.</p>
+        </div>
+
+        <div class="grid-4">
+            <div class="card reveal">
+                <div class="f-icon">⚡</div>
+                <h3>Instant answers</h3>
+                <p>Get replies to common college questions in seconds.</p>
+            </div>
+            <div class="card reveal">
+                <div class="f-icon">🕒</div>
+                <h3>Available anytime</h3>
+                <p>Ask questions whenever the website is running.</p>
+            </div>
+            <div class="card reveal">
+                <div class="f-icon">🛡️</div>
+                <h3>No invented details</h3>
+                <p>Unconfirmed information is redirected to the college office.</p>
+            </div>
+            <div class="card reveal">
+                <div class="f-icon">📱</div>
+                <h3>Works on mobile</h3>
+                <p>A responsive design for phones, tablets and laptops.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== HOW IT WORKS ========== -->
+<section class="section alt">
+    <div class="container">
+        <div class="section-head reveal">
+            <span class="label">HOW IT WORKS</span>
+            <h2>Three simple steps</h2>
+            <p>A rule-based chatbot built with Python Flask, HTML, CSS and JavaScript.</p>
+        </div>
+
+        <div class="steps">
+            <div class="card step reveal">
+                <div class="step-num">1</div>
+                <h3>Ask a question</h3>
+                <p>Type a question or tap a quick topic button.</p>
+            </div>
+            <div class="card step reveal">
+                <div class="step-num">2</div>
+                <h3>Keyword matching</h3>
+                <p>The Python back end finds keywords and matches them to the FAQ list.</p>
+            </div>
+            <div class="card step reveal">
+                <div class="step-num">3</div>
+                <h3>Get your answer</h3>
+                <p>The reply appears instantly in the chat window.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section class="section" id="about">
+    <div class="container about-grid">
+        <div class="about-text reveal">
+            <span class="label">ABOUT THE COLLEGE</span>
+            <h2>Engineering education.<br><span class="gradient-text">Empowering women.</span></h2>
+            <p>
+                Shree Siddheshwar Women's College of Engineering is a women's engineering
+                institution in Solapur, Maharashtra, managed by Shri Siddheshwar Devasthan.
+            </p>
+
+            <ul class="checklist">
+                <li><span class="tick">✓</span> Affiliated with Dr. Babasaheb Ambedkar Technological University, Lonere</li>
+                <li><span class="tick">✓</span> Established in the academic year 2019–20</li>
+                <li><span class="tick">✓</span> Located in Bhavani Peth, Solapur</li>
+                <li><span class="tick">✓</span> Training &amp; Placement support through SiddhCamp</li>
+            </ul>
+        </div>
+
+        <div class="info-card reveal">
+            <h3>🏛️ College at a glance</h3>
+            <div class="info-row"><span>Full name</span><strong>Shree Siddheshwar Women's College of Engineering</strong></div>
+            <div class="info-row"><span>Short name</span><strong>SSWCOE</strong></div>
+            <div class="info-row"><span>Institute code</span><strong>06938</strong></div>
+            <div class="info-row"><span>University</span><strong>DBATU, Lonere</strong></div>
+            <div class="info-row"><span>Managed by</span><strong>Shri Siddheshwar Devasthan</strong></div>
+            <div class="info-row"><span>Location</span><strong>Solapur, Maharashtra</strong></div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== PROGRAMS ========== -->
+<section class="section alt" id="programs">
+    <div class="container">
+        <div class="section-head reveal">
+            <span class="label">ACADEMIC PROGRAMS</span>
+            <h2>Explore engineering programs</h2>
+            <p>Programs listed in the information supplied for this project. Confirm current intake with the college.</p>
+        </div>
+
+        <div class="programs">
+            <div class="card program reveal">
+                <span class="p-icon">CSE</span>
+                <h3>Computer Science &amp; Engineering</h3>
+                <p>Programming, software development and computing systems.</p>
+                <button class="ask" type="button" data-question="Tell me about CSE courses">Ask assistant →</button>
+            </div>
+            <div class="card program reveal">
+                <span class="p-icon">AI &amp; DS</span>
+                <h3>CSE — Artificial Intelligence &amp; Data Science</h3>
+                <p>Machine learning, data analytics and AI applications.</p>
+                <button class="ask" type="button" data-question="Tell me about AI and DS course">Ask assistant →</button>
+            </div>
+            <div class="card program reveal">
+                <span class="p-icon">EE</span>
+                <h3>Electrical Engineering</h3>
+                <p>Power systems, machines and electrical technology.</p>
+                <button class="ask" type="button" data-question="Tell me about electrical course">Ask assistant →</button>
+            </div>
+            <div class="card program reveal">
+                <span class="p-icon">E&amp;TC</span>
+                <h3>Electronics &amp; Telecommunication</h3>
+                <p>Electronics, communication and signal systems.</p>
+                <button class="ask" type="button" data-question="Tell me about electronics course">Ask assistant →</button>
+            </div>
+            <div class="card program reveal">
+                <span class="p-icon">E&amp;CE</span>
+                <h3>Electronics &amp; Computer Engineering</h3>
+                <p>A combination of electronics and computer engineering.</p>
+                <button class="ask" type="button" data-question="Tell me about electronics and computer course">Ask assistant →</button>
+            </div>
+            <div class="card program cta reveal">
+                <span class="p-icon">❓</span>
+                <h3>Need admission help?</h3>
+                <p>Ask the assistant for admission guidance and contact details.</p>
+                <button class="ask" type="button" data-question="How can I get admission information?">Ask now →</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FAQ ========== -->
+<section class="section" id="faq">
+    <div class="container">
+        <div class="section-head reveal">
+            <span class="label">FAQ</span>
+            <h2>Frequently asked questions</h2>
+            <p>Quick answers to the most common questions.</p>
+        </div>
+
+        <div class="faq">
+            <details class="reveal">
+                <summary>Which university is SSWCOE affiliated with?</summary>
+                <p>SSWCOE is affiliated with Dr. Babasaheb Ambedkar Technological University (DBATU), Lonere.</p>
+            </details>
+            <details class="reveal">
+                <summary>What is the institute code of SSWCOE?</summary>
+                <p>The institute code is 06938 (also written as 6938).</p>
+            </details>
+            <details class="reveal">
+                <summary>Is SSWCOE a women's college?</summary>
+                <p>Yes. SSWCOE is described as a women's engineering college in Solapur.</p>
+            </details>
+            <details class="reveal">
+                <summary>Who manages the college?</summary>
+                <p>The college is managed by Shri Siddheshwar Devasthan, Solapur.</p>
+            </details>
+            <details class="reveal">
+                <summary>Where can I find fee details?</summary>
+                <p>Fees are not confirmed in this project. Please contact the college office at 0217-2627227 or office@sswcoe.edu.in.</p>
+            </details>
+            <details class="reveal">
+                <summary>Is a hostel available?</summary>
+                <p>The supplied information describes a women's hostel with mess, Wi-Fi and security. Please confirm availability and charges with the college.</p>
+            </details>
+        </div>
+    </div>
+</section>
+
+<!-- ========== CONTACT ========== -->
+<section class="contact" id="contact">
+    <div class="container contact-grid">
+        <div class="contact-text reveal">
+            <span class="label">GET IN TOUCH</span>
+            <h2>Need more information?</h2>
+            <p>For admission notices, fees, eligibility and other official details, contact the college office.</p>
+            <p>
+                📍 T.P.S. II, Final Plot No. 74, Bhavani Peth,<br>
+                Rupa Bhavani Mandir Road, Solapur, Maharashtra – 413002
+            </p>
+        </div>
+
+        <div class="contact-list reveal">
+            <a class="contact-card" href="tel:+912172627227">
+                <span class="c-icon">📞</span>
+                <span><small>PHONE</small><strong>0217-2627227</strong></span>
+            </a>
+            <a class="contact-card" href="mailto:office@sswcoe.edu.in">
+                <span class="c-icon">✉️</span>
+                <span><small>EMAIL</small><strong>office@sswcoe.edu.in</strong></span>
+            </a>
+            <a class="contact-card" href="https://sswcoe.edu.in/index.html" target="_blank" rel="noopener noreferrer">
+                <span class="c-icon">🌐</span>
+                <span><small>OFFICIAL WEBSITE</small><strong>www.sswcoe.edu.in ↗</strong></span>
+            </a>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<footer>
+    <div class="container">
+        © SSWCOE Campus Connect · College FAQ Chatbot Project<br>
+        Built with Python Flask, HTML, CSS &amp; JavaScript · Not an official college service
+    </div>
+</footer>
+
+<button class="to-top" id="to-top" type="button" aria-label="Back to top">↑</button>
+
+<script>
+/* ---------- Shortcuts ---------- */
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => document.querySelectorAll(selector);
+const root = document.documentElement;
+
+/* ---------- Dark / Light mode ---------- */
+const themeButton = $("#theme-toggle");
+
+function applyTheme(theme) {
+    root.setAttribute("data-theme", theme);
+    themeButton.textContent = theme === "dark" ? "☀️" : "🌙";
+    try { localStorage.setItem("theme", theme); } catch (e) {}
+}
+
+let savedTheme = "light";
+try { savedTheme = localStorage.getItem("theme") || "light"; } catch (e) {}
+applyTheme(savedTheme);
+
+themeButton.addEventListener("click", () => {
+    applyTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
+});
+
+/* ---------- Mobile menu ---------- */
+const navLinks = $("#nav-links");
+$("#menu-toggle").addEventListener("click", () => navLinks.classList.toggle("open"));
+$$("#nav-links a").forEach((link) => {
+    link.addEventListener("click", () => navLinks.classList.remove("open"));
+});
+
+/* ---------- Navbar shadow + back-to-top ---------- */
+const header = $("#header");
+const toTop = $("#to-top");
+
+window.addEventListener("scroll", () => {
+    header.classList.toggle("scrolled", window.scrollY > 10);
+    toTop.classList.toggle("show", window.scrollY > 600);
+});
+
+toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+/* ---------- Scroll animations ---------- */
+if ("IntersectionObserver" in window) {
+    root.classList.add("js-ready");
+
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.05 });
+
+    $$(".reveal").forEach((element) => revealObserver.observe(element));
+}
+
+/* Safety: show all sections after 2 seconds */
+setTimeout(() => {
+    $$(".reveal").forEach((element) => element.classList.add("visible"));
+}, 2000);
+
+/* ---------- Count-up numbers ---------- */
+function countUp(element) {
+    const target = Number(element.dataset.count);
+    const start = Number(element.dataset.start || 0);
+    const duration = 1400;
+    const startTime = performance.now();
+
+    function step(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        element.textContent = Math.round(start + (target - start) * eased);
+        if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
+$$("[data-count]").forEach((element) => countUp(element));
+
+/* ---------- Chatbot ---------- */
+const form = $("#chat-form");
+const input = $("#question");
+const messages = $("#messages");
+const sendButton = $("#send-button");
+const clearButton = $("#clear-chat");
+const questionButtons = $$("[data-question]");
+let busy = false;
+
+function currentTime() {
+    return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+/* Turns website, email and phone text into clickable links */
+function addTextWithLinks(container, text) {
+    const pattern = /(https?:\/\/[^\s]+|[\w.+-]+@[\w-]+\.[a-z.]+|0217-2627227)/gi;
+    let last = 0;
+
+    for (const match of text.matchAll(pattern)) {
+        const value = match[0];
+        container.append(document.createTextNode(text.slice(last, match.index)));
+
+        const link = document.createElement("a");
+        if (value.startsWith("http")) {
+            link.href = value;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+        } else if (value.includes("@")) {
+            link.href = "mailto:" + value;
+        } else {
+            link.href = "tel:+912172627227";
+        }
+        link.textContent = value;
+        container.append(link);
+
+        last = match.index + value.length;
+    }
+    container.append(document.createTextNode(text.slice(last)));
+}
+
+function addMessage(text, sender) {
+    const row = document.createElement("div");
+    row.className = "row " + sender;
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar";
+    avatar.textContent = sender === "bot" ? "S" : "You";
+
+    const wrapper = document.createElement("div");
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    addTextWithLinks(bubble, text);
+
+    const time = document.createElement("span");
+    time.className = "time";
+    time.textContent = currentTime();
+
+    wrapper.append(bubble, time);
+    row.append(avatar, wrapper);
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function showTyping() {
+    const row = document.createElement("div");
+    row.className = "row bot";
+    row.innerHTML =
+        '<div class="avatar">S</div>' +
+        '<div class="bubble typing"><span></span><span></span><span></span></div>';
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+    return row;
+}
+
+function setBusy(value) {
+    busy = value;
+    input.disabled = value;
+    sendButton.disabled = value;
+    clearButton.disabled = value;
+    questionButtons.forEach((button) => { button.disabled = value; });
+}
+
+function resetChat() {
+    messages.replaceChildren();
+    addMessage(
+        "Hello! 👋 Welcome to SSWCOE Campus Connect.\n\n" +
+        "Ask me about courses, admission, hostel, placements, " +
+        "affiliation or contact details. You can also tap a topic below.",
+        "bot"
+    );
+}
+
+async function sendQuestion(question) {
+    question = question.trim();
+    if (!question || busy) return;
+
+    addMessage(question, "user");
+    input.value = "";
+    setBusy(true);
+
+    const typing = showTyping();
+
+    try {
+        const [response] = await Promise.all([
+            fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: question })
+            }),
+            new Promise((resolve) => setTimeout(resolve, 600))
+        ]);
+
+        const data = await response.json();
+        typing.remove();
+        addMessage(data.reply || "Sorry, something went wrong.", "bot");
+
+    } catch (error) {
+        typing.remove();
+        addMessage(
+            "I couldn't connect to the server. Please keep 'python app.py' running in PowerShell.",
+            "bot"
+        );
+
+    } finally {
+        setBusy(false);
+        input.focus({ preventScroll: true });
+    }
+}
+
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    sendQuestion(input.value);
+});
+
+questionButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        if (!button.closest(".chat-card")) {
+            $("#assistant").scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        sendQuestion(button.dataset.question);
+    });
+});
+
+clearButton.addEventListener("click", () => {
+    if (!busy) resetChat();
+});
+
+resetChat();
+</script>
+</body>
+</html>
