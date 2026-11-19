@@ -40,4 +40,4 @@ College_FAQ_Chatbot/
 _Add your screenshots here._
 
 ## Author
-Your Name – CSE (AI & DS), SSWCOE Solapur
+Sara Hotgiwale – CSE (AI & DS), SSWCOE Solapur
